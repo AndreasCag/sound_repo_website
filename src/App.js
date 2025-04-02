@@ -9,13 +9,13 @@ function App() {
   const processAudioData = async (audioData) => {
     try {
       // Create inference session
-      const session = await ort.InferenceSession.create('./my_audio_classifier.onnx');
+      const session = await ort.InferenceSession.create('./my_audio_classifier_2.onnx');
 
       // Create tensor from audio data
       const inputTensor = new ort.Tensor(
         'float32',
         new Float32Array(audioData),
-        [1, 1, 64000]
+        [1, 1, 16000]
       );
 
       // Prepare feeds
@@ -25,8 +25,15 @@ function App() {
       // Run the model
       const results = await session.run(feeds);
       const outputTensor = Object.values(results)[0];
-      const predictionValue = outputTensor.data[0];
-      setPrediction(predictionValue);
+      
+      // Get all three prediction values (noise, inhale, exhale)
+      const predictions = {
+        noise: outputTensor.data[0],
+        inhale: outputTensor.data[1],
+        exhale: outputTensor.data[2]
+      };
+      
+      setPrediction(predictions);
     } catch (error) {
       console.error('Error running the model:', error);
     }
@@ -41,8 +48,8 @@ function App() {
       
       let audioData = [];
       const sampleRate = 16000;
-      const duration = 4; // seconds
-      const requiredSamples = sampleRate * duration;
+      const duration = 1; // Changed from 4 to 1 second
+      const requiredSamples = sampleRate * duration; // Now equals 16000
       
       setIsRecording(true);
       console.log(audioContext.sampleRate)
@@ -60,11 +67,11 @@ function App() {
           audioData = audioData.concat(Array.from(inputData));
         }
 
-        // Process every 64000 samples (4 seconds) and keep the most recent data
+        // Process every 16000 samples (1 second) and keep the most recent data
         if (audioData.length >= requiredSamples) {
           const finalAudioData = audioData.slice(-requiredSamples);
           processAudioData(finalAudioData);
-          // Keep only the most recent 3 seconds of data
+          // Keep only the most recent 0.75 seconds of data
           audioData = audioData.slice(-((requiredSamples * 3) / 4));
         }
       };
@@ -93,8 +100,19 @@ function App() {
         </button>
         {prediction !== null && (
           <>
-            <p>Prediction: {prediction.toFixed(4) > 0 ? 'Breathing' : 'Not breathing'}</p>
-            <p>{prediction.toFixed(4)}</p>
+            <p>Predictions:</p>
+            <ul>
+              <li>Noise: {prediction.noise.toFixed(4)}</li>
+              <li>Inhale: {prediction.inhale.toFixed(4)}</li>
+              <li>Exhale: {prediction.exhale.toFixed(4)}</li>
+            </ul>
+            <p>Detected: {
+              Math.max(prediction.noise, prediction.inhale, prediction.exhale) === prediction.noise 
+                ? 'Noise' 
+                : Math.max(prediction.inhale, prediction.exhale) === prediction.inhale 
+                  ? 'Inhale' 
+                  : 'Exhale'
+            }</p>
           </>
         )}
       </header>

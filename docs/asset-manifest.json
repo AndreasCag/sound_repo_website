@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/sound_repo_website/static/css/main.f855e6bc.css",
-    "main.js": "/sound_repo_website/static/js/main.9b9ce5f4.js",
+    "main.js": "/sound_repo_website/static/js/main.e861f5f0.js",
     "static/js/453.c43c73a8.chunk.js": "/sound_repo_website/static/js/453.c43c73a8.chunk.js",
     "static/media/ort-wasm-simd-threaded.wasm": "/sound_repo_website/static/media/ort-wasm-simd-threaded.50be9f91026bda8b3ca4.wasm",
     "index.html": "/sound_repo_website/index.html",
     "main.f855e6bc.css.map": "/sound_repo_website/static/css/main.f855e6bc.css.map",
-    "main.9b9ce5f4.js.map": "/sound_repo_website/static/js/main.9b9ce5f4.js.map",
+    "main.e861f5f0.js.map": "/sound_repo_website/static/js/main.e861f5f0.js.map",
     "453.c43c73a8.chunk.js.map": "/sound_repo_website/static/js/453.c43c73a8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.9b9ce5f4.js"
+    "static/js/main.e861f5f0.js"
   ]
 }
